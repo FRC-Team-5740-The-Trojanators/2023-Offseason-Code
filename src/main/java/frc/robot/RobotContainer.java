@@ -6,12 +6,15 @@ package frc.robot;
 
 import frc.robot.Constants;
 import frc.robot.Constants.HIDConstants;
+import frc.robot.commands.MotorCommand;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Motor;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -19,16 +22,17 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer 
+{
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem m_driveSubsystem = new DriveSubsystem(true);
-
+  public final Motor m_motor = new Motor();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController m_driverController =
       new XboxController(HIDConstants.k_DriverControllerPort);
 
-      private final SwerveDriveCommand m_driveCommand = new SwerveDriveCommand(m_driveSubsystem, m_driverController);
- 
+    private final SwerveDriveCommand m_driveCommand = new SwerveDriveCommand(m_driveSubsystem, m_driverController);
+   
       /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
   {
@@ -49,10 +53,15 @@ public class RobotContainer {
    */
   private void configureBindings() 
   {
+    JoystickButton forwardMotor = new JoystickButton(m_driverController , HIDConstants.kA);
+    JoystickButton backwardMotor = new JoystickButton(m_driverController , HIDConstants.kB);
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+
+    forwardMotor.whileTrue(new MotorCommand(m_motor, "forward"));
+    backwardMotor.whileTrue(new MotorCommand(m_motor, "backward"));
   }
 
   /**
