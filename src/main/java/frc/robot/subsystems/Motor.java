@@ -5,15 +5,23 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import com.revrobotics.SparkMaxRelativeEncoder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Motor extends SubsystemBase 
 {
   private CANSparkMax m_motor = new CANSparkMax(1, MotorType.kBrushless);
   /** Creates a new Motor. */
+  private double m_angle = 0;
+  private double m_setpoint = 5;
+  private PIDController m_motorPID = new PIDController( 1, 0, 0 );
+  private RelativeEncoder m_encoder = m_motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+  //m_motorPID.setFeedbackDevice(m_encoder);
   public Motor() 
   {
     m_motor.restoreFactoryDefaults();
@@ -25,8 +33,10 @@ public class Motor extends SubsystemBase
   }
 
   @Override
-  public void periodic() {
+  public void periodic() 
+  {
     // This method will be called once per scheduler run
+    goToPosition(m_setpoint);
   }
   public void forceMotorExtend()
   {
@@ -42,4 +52,11 @@ public class Motor extends SubsystemBase
   {
     m_motor.set(0);
   }
+
+  public void goToPosition(double goalPosition)
+  {
+    double pidVal = m_motorPID.calculate(m_angle, goalPosition);
+    m_motor.setVoltage(pidVal);
+  }
+  
 }
