@@ -17,10 +17,11 @@ public class Motor extends SubsystemBase
 {
   private CANSparkMax m_motor = new CANSparkMax(1, MotorType.kBrushless);
   /** Creates a new Motor. */
-  private double m_angle = 0;
-  private double m_setpoint = 5;
-  private PIDController m_motorPID = new PIDController( 1, 0, 0 );
-  private RelativeEncoder m_encoder = m_motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+  //private double m_counts = 0;
+  private RelativeEncoder m_encoder = m_motor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+  private double m_setpoint = 5 * m_encoder.getCountsPerRevolution();
+  private PIDController m_motorPID = new PIDController( .0001, 0, 0 );
+  
   //m_motorPID.setFeedbackDevice(m_encoder);
   public Motor() 
   {
@@ -55,8 +56,13 @@ public class Motor extends SubsystemBase
 
   public void goToPosition(double goalPosition)
   {
-    double pidVal = m_motorPID.calculate(m_angle, goalPosition);
+    double pidVal = m_motorPID.calculate(getRelativeEncoder(), goalPosition);
     m_motor.setVoltage(pidVal);
+  }
+
+  public double getRelativeEncoder()
+  {
+    return m_encoder.getPosition() * m_encoder.getCountsPerRevolution();
   }
   
 }

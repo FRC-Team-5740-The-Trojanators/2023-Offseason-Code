@@ -22,7 +22,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANBusIDs;
 import frc.robot.Constants.SwerveDriveModuleConstants;
 
-public class DriveSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase 
+{
   /** Creates a new DriveSubsystem. */
     public Pigeon2 m_imu = new Pigeon2(CANBusIDs.k_pigeon2ID, "CANivorous_Rex");
     DriveSubsystem m_drivetrain;
