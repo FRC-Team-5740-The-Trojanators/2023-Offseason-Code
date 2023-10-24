@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,9 +22,10 @@ public class Motor extends SubsystemBase
   /** Creates a new Motor. */
   //private double m_counts = 0;
   private RelativeEncoder m_encoder = m_motor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
-  private double m_setpoint = 5;
-  private PIDController m_motorPID = new PIDController( 1, 0, 0 );
-  
+  private PIDController m_motorPID = new PIDController( 0.73, 0, 0 );
+  private PIDController m_motorPIDvelocity = new PIDController(1, 0, 0 );
+  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 7.67, 0);
+
   //m_motorPID.setFeedbackDevice(m_encoder);
   public Motor() 
   {
@@ -33,7 +35,7 @@ public class Motor extends SubsystemBase
     m_motor.setInverted(false);
     m_motor.setOpenLoopRampRate(2);
     m_motor.setSmartCurrentLimit(80);
-    m_motorPID.setTolerance(.1);
+    m_motorPID.setTolerance(.02);
   }
 
   @Override
@@ -42,6 +44,9 @@ public class Motor extends SubsystemBase
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("setpoint", Constants.revs);
     SmartDashboard.putNumber("encodervalue", m_encoder.getPosition());
+    SmartDashboard.putData("PID", m_motorPID);
+    SmartDashboard.putBoolean("At Setpoint", m_motorPID.atSetpoint());
+    SmartDashboard.putNumber("PID error", m_motorPID.getPositionError());
   }
   public void forceMotorExtend()
   {
@@ -63,7 +68,12 @@ public class Motor extends SubsystemBase
     double pidVal = m_motorPID.calculate(m_encoder.getPosition(), goalPosition);
     m_motor.setVoltage(pidVal);
   }
-  
+  public void setVelocity(double velocity)
+  {
+    double pidVal = m_motorPIDvelocity.calculate(m_encoder.getVelocity(), velocity);
+    double FFVal = feedforward.calculate(velocity, 20);
+    m_motor.setVoltage(pidVal+FFVal);
+  }
   public void zeroEncoder()
   {
     m_encoder.setPosition(0);
@@ -73,5 +83,8 @@ public class Motor extends SubsystemBase
   {
       return m_motorPID.atSetpoint();
   }
-
+  public boolean atVelocity()
+  {
+      return m_motorPIDvelocity.atSetpoint();
+  }
 }

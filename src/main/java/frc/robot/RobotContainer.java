@@ -13,6 +13,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Motor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,6 +30,7 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem m_driveSubsystem = new DriveSubsystem(true);
   public final Motor m_motor = new Motor();
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController m_driverController =
       new XboxController(HIDConstants.k_DriverControllerPort);
@@ -58,6 +60,7 @@ public class RobotContainer
     JoystickButton forwardMotor = new JoystickButton(m_driverController , HIDConstants.kA);
     JoystickButton backwardMotor = new JoystickButton(m_driverController , HIDConstants.kB);
     JoystickButton runPIDMotor = new JoystickButton(m_driverController , HIDConstants.kX);
+    JoystickButton runPIDMotorBackwards = new JoystickButton(m_driverController , HIDConstants.kBack);
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
@@ -66,6 +69,7 @@ public class RobotContainer
     forwardMotor.whileTrue(new MotorCommand(m_motor, "forward"));
     backwardMotor.whileTrue(new MotorCommand(m_motor, "backward"));
     runPIDMotor.onTrue(new MotorPIDCommand(Constants.revs, m_motor));
+    runPIDMotorBackwards.onTrue(new MotorPIDCommand((Constants.revs) * -1, m_motor));
   }
 
   /**
