@@ -24,7 +24,7 @@ public class Motor extends SubsystemBase
   private RelativeEncoder m_encoder = m_motor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
   private PIDController m_motorPID = new PIDController( 0.73, 0, 0 );
   private PIDController m_motorPIDvelocity = new PIDController(1, 0, 0 );
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 7.67, 0);
+  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, .0026, 0);
 
   //m_motorPID.setFeedbackDevice(m_encoder);
   public Motor() 
@@ -47,7 +47,12 @@ public class Motor extends SubsystemBase
     SmartDashboard.putData("PID", m_motorPID);
     SmartDashboard.putBoolean("At Setpoint", m_motorPID.atSetpoint());
     SmartDashboard.putNumber("PID error", m_motorPID.getPositionError());
+    SmartDashboard.putNumber("Velocity", getVelocity());
+    SmartDashboard.putData("PIDF", m_motorPIDvelocity);
+    SmartDashboard.putBoolean("Velocity Setpoint", m_motorPIDvelocity.atSetpoint());
+    SmartDashboard.putNumber("PIDF error", m_motorPIDvelocity.getPositionError());
   }
+
   public void forceMotorExtend()
   {
       m_motor.set(.1);
@@ -70,9 +75,11 @@ public class Motor extends SubsystemBase
   }
   public void setVelocity(double velocity)
   {
-    double pidVal = m_motorPIDvelocity.calculate(m_encoder.getVelocity(), velocity);
+    double pidVal = m_motorPIDvelocity.calculate(getVelocity(), velocity);
     double FFVal = feedforward.calculate(velocity, 20);
     m_motor.setVoltage(pidVal+FFVal);
+    SmartDashboard.putNumber("PIDval", pidVal);
+    SmartDashboard.putNumber("FFval", FFVal);
   }
   public void zeroEncoder()
   {
@@ -86,5 +93,9 @@ public class Motor extends SubsystemBase
   public boolean atVelocity()
   {
       return m_motorPIDvelocity.atSetpoint();
+  }
+  public double getVelocity()
+  {
+      return m_encoder.getVelocity();
   }
 }

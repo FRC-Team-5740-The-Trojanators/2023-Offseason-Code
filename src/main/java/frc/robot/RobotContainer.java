@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.HIDConstants;
 import frc.robot.commands.MotorCommand;
 import frc.robot.commands.MotorPIDCommand;
+import frc.robot.commands.MotorPIDFCommand;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Motor;
@@ -61,6 +62,8 @@ public class RobotContainer
     JoystickButton backwardMotor = new JoystickButton(m_driverController , HIDConstants.kB);
     JoystickButton runPIDMotor = new JoystickButton(m_driverController , HIDConstants.kX);
     JoystickButton runPIDMotorBackwards = new JoystickButton(m_driverController , HIDConstants.kBack);
+    JoystickButton runPIDFMotor = new JoystickButton(m_driverController, HIDConstants.kRB);
+    JoystickButton runPIDFMotorBackwards = new JoystickButton(m_driverController, HIDConstants.kLB);
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
@@ -70,6 +73,8 @@ public class RobotContainer
     backwardMotor.whileTrue(new MotorCommand(m_motor, "backward"));
     runPIDMotor.onTrue(new MotorPIDCommand(Constants.revs, m_motor));
     runPIDMotorBackwards.onTrue(new MotorPIDCommand((Constants.revs) * -1, m_motor));
+    runPIDFMotor.whileTrue(new MotorPIDFCommand(2000, m_motor));
+    runPIDFMotorBackwards.whileTrue(new MotorPIDFCommand(-2000, m_motor));
   }
 
   /**
