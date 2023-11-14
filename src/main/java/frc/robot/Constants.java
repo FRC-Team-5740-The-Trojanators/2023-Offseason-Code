@@ -21,7 +21,10 @@ public final class Constants
 
   public static final int neoCountsPerRev = 42;
   public static final double revs = 5;
-    
+  public static final class VisionConstants 
+  {
+  public static final int detectorPipeline = 2;
+  }
 
   public static final class HIDConstants 
   {

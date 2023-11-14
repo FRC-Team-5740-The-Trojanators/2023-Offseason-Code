@@ -1,0 +1,17 @@
+{
+  "NetworkTables": {
+    "retained": {
+      "limelight-b": {
+        "open": true
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/SendableChooser[0]": "String Chooser"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "5740"
+  }
+}
