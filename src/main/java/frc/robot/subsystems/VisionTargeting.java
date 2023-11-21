@@ -8,10 +8,12 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
-public class VisionTargeting extends SubsystemBase 
+public class VisionTargeting extends SubsystemBase
 {
-  private double tv;
+  private static boolean targetVisible;
+  private static double tv;
   private double ty;
   private double tx; 
   private String tclass;
@@ -38,9 +40,16 @@ public class VisionTargeting extends SubsystemBase
     tclass = networkTableTclass.getString("");
   }
   
-  public double getTv()
+  public static boolean getTargetVisible()
   {
-    return tv;
+    if (tv == 1.0)
+    {
+      return true;
+    }
+    else 
+    {
+      return false;
+    }
   }
 
   public double getTy()
@@ -52,6 +61,36 @@ public class VisionTargeting extends SubsystemBase
   {
     return tx;
   }
+
+  public double getDistanceToTarget()
+  {
+    double targetHeight = 0;
+
+    if(VisionTargeting.getTargetVisible()) 
+    {
+      if(getObjectType() == "cube")
+      {
+        targetHeight = Constants.VisionTargeting.cubeHeight;
+      }
+  
+      if(getObjectType() == "cone")
+      {
+        targetHeight = Constants.VisionTargeting.coneHeight;
+      }
+  
+      return (Constants.VisionTargeting.cameraHeight - targetHeight) / Math.tan(getTy()); 
+    }
+
+    else 
+    {
+      return 0;
+    }
+
+   
+   
+  }  
+
+
 
   public String getObjectType()
   {
@@ -69,5 +108,9 @@ public class VisionTargeting extends SubsystemBase
   public void setPipeline(int pipeline)
   {
     NetworkTableInstance.getDefault().getTable("limelight-b").getEntry("pipeline").setNumber(pipeline);
+  }
+
+  public String getTclass() {
+    return tclass;
   }
 }

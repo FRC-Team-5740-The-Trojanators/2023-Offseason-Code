@@ -149,6 +149,13 @@ public final class Constants
         public static final int k_RightRear_SteeringMotor = 8; 
 
         public static final int k_pigeon2ID = 0;
-    }  
+    }
+    
+    public static final class VisionTargeting 
+    {
+        public static final double cameraHeight = Units.inchesToMeters(30.5);
+        public static final double cubeHeight = Units.inchesToMeters(4.5);
+        public static final double coneHeight = Units.inchesToMeters(6.5);
+    }
   
 }
