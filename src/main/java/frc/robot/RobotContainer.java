@@ -6,12 +6,14 @@ package frc.robot;
 
 import frc.robot.Constants;
 import frc.robot.Constants.HIDConstants;
+import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.MotorCommand;
 import frc.robot.commands.MotorPIDCommand;
 import frc.robot.commands.MotorPIDFCommand;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Motor;
+import frc.robot.subsystems.VisionTargeting;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer 
 {
   // The robot's subsystems and commands are defined here...
+  public final VisionTargeting m_VisionTargeting = new VisionTargeting();
   public final DriveSubsystem m_driveSubsystem = new DriveSubsystem(true);
   public final Motor m_motor = new Motor();
   
@@ -64,6 +67,7 @@ public class RobotContainer
     JoystickButton runPIDMotorBackwards = new JoystickButton(m_driverController , HIDConstants.kBack);
     JoystickButton runPIDFMotor = new JoystickButton(m_driverController, HIDConstants.kRB);
     JoystickButton runPIDFMotorBackwards = new JoystickButton(m_driverController, HIDConstants.kLB);
+    JoystickButton targetCommandButton = new JoystickButton(m_driverController, HIDConstants.kStart);
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
@@ -75,6 +79,7 @@ public class RobotContainer
     runPIDMotorBackwards.onTrue(new MotorPIDCommand((Constants.revs) * -1, m_motor));
     runPIDFMotor.whileTrue(new MotorPIDFCommand(2000, m_motor));
     runPIDFMotorBackwards.whileTrue(new MotorPIDFCommand(-2000, m_motor));
+    targetCommandButton.whileTrue(new DriveToTarget(m_driveSubsystem, m_VisionTargeting));
   }
 
   /**

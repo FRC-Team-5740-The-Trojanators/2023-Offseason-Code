@@ -1,12 +1,17 @@
 {
   "NetworkTables": {
     "retained": {
+      "SmartDashboard": {
+        "open": true
+      },
       "limelight-b": {
         "open": true
       }
     },
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/PID": "PIDController",
+      "/SmartDashboard/PIDF": "PIDController",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
     }
   },

@@ -7,12 +7,12 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class VisionTargeting extends SubsystemBase
 {
-  private static boolean targetVisible;
   private static double tv;
   private double ty;
   private double tx; 
@@ -65,6 +65,7 @@ public class VisionTargeting extends SubsystemBase
   public double getDistanceToTarget()
   {
     double targetHeight = 0;
+    double distanceToTarget = (Constants.VisionTargeting.cameraHeight - targetHeight) / Math.tan(getTy());
 
     if(VisionTargeting.getTargetVisible()) 
     {
@@ -77,20 +78,15 @@ public class VisionTargeting extends SubsystemBase
       {
         targetHeight = Constants.VisionTargeting.coneHeight;
       }
-  
-      return (Constants.VisionTargeting.cameraHeight - targetHeight) / Math.tan(getTy()); 
+      SmartDashboard.putNumber("distance to target", distanceToTarget);
+      return distanceToTarget;
     }
 
     else 
     {
       return 0;
     }
-
-   
-   
   }  
-
-
 
   public String getObjectType()
   {
