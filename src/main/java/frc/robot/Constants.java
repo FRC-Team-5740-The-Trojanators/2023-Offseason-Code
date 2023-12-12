@@ -24,6 +24,7 @@ public final class Constants
   public static final class VisionConstants 
   {
   public static final int detectorPipeline = 2;
+  public static final int aprilTagPipeline = 0;
   }
 
   public static final class HIDConstants 
@@ -79,9 +80,9 @@ public final class Constants
       public static final double k_MaxAutoSpeed = 4.5; //m/s
       public static final double k_MaxAcceleration = 1; //m/s/s 
       
-      public static final double k_XYjoystickCoefficient = .8; //speed limiter
+      public static final double k_XYjoystickCoefficient = .2; //speed limiter was at .8
       public static final double k_MaxAngularSpeed = Units.feetToMeters(16) / k_RobotRadius; // 628; //rad/s TODO confirm
-      public static final double k_RotCoefficient = .4; //speed limiter
+      public static final double k_RotCoefficient = .2; //speed limiter was at .4
       public static final double k_XYslewRate = 10;
 
       public static final double k_slowXYjoystickCoefficient = .2; //slow speed limiter
@@ -156,6 +157,7 @@ public final class Constants
         public static final double cameraHeight = Units.inchesToMeters(30.5);
         public static final double cubeHeight = Units.inchesToMeters(4.5);
         public static final double coneHeight = Units.inchesToMeters(6.5);
+        public static final double aprilTagHeight = Units.inchesToMeters(8);
     }
   
 }

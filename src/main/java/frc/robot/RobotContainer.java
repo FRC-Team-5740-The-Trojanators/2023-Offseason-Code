@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants;
 import frc.robot.Constants.HIDConstants;
 import frc.robot.commands.DriveToTarget;
+import frc.robot.commands.RotateToTarget;
 import frc.robot.commands.MotorCommand;
 import frc.robot.commands.MotorPIDCommand;
 import frc.robot.commands.MotorPIDFCommand;
@@ -64,10 +65,11 @@ public class RobotContainer
     JoystickButton forwardMotor = new JoystickButton(m_driverController , HIDConstants.kA);
     JoystickButton backwardMotor = new JoystickButton(m_driverController , HIDConstants.kB);
     JoystickButton runPIDMotor = new JoystickButton(m_driverController , HIDConstants.kX);
-    JoystickButton runPIDMotorBackwards = new JoystickButton(m_driverController , HIDConstants.kBack);
+    //JoystickButton runPIDMotorBackwards = new JoystickButton(m_driverController , HIDConstants.kBack);
     JoystickButton runPIDFMotor = new JoystickButton(m_driverController, HIDConstants.kRB);
     JoystickButton runPIDFMotorBackwards = new JoystickButton(m_driverController, HIDConstants.kLB);
-    JoystickButton targetCommandButton = new JoystickButton(m_driverController, HIDConstants.kStart);
+    JoystickButton rotateTargetCommandButton = new JoystickButton(m_driverController, HIDConstants.kStart);
+    JoystickButton driveTargetCommandButton = new JoystickButton(m_driverController, HIDConstants.kBack);
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
@@ -76,10 +78,12 @@ public class RobotContainer
     forwardMotor.whileTrue(new MotorCommand(m_motor, "forward"));
     backwardMotor.whileTrue(new MotorCommand(m_motor, "backward"));
     runPIDMotor.onTrue(new MotorPIDCommand(Constants.revs, m_motor));
-    runPIDMotorBackwards.onTrue(new MotorPIDCommand((Constants.revs) * -1, m_motor));
+    //runPIDMotorBackwards.onTrue(new MotorPIDCommand((Constants.revs) * -1, m_motor));
     runPIDFMotor.whileTrue(new MotorPIDFCommand(2000, m_motor));
     runPIDFMotorBackwards.whileTrue(new MotorPIDFCommand(-2000, m_motor));
-    targetCommandButton.whileTrue(new DriveToTarget(m_driveSubsystem, m_VisionTargeting));
+    driveTargetCommandButton.whileTrue(new DriveToTarget(m_driveSubsystem, m_VisionTargeting, true));
+    rotateTargetCommandButton.whileTrue(new RotateToTarget(m_driveSubsystem, m_VisionTargeting, true));
+
   }
 
   /**

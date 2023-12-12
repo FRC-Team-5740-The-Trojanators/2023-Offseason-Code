@@ -10,19 +10,18 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionTargeting;
 
-public class DriveToTarget extends CommandBase 
+public class RotateToTarget extends CommandBase 
 {
 
-
-  private final double KpDistance = -20;
-
+  private final double KpAim = -0.2;
+  private final double min_aim_command = 0.05;
 
   private VisionTargeting visionTargeting;
   private DriveSubsystem driveSubsystem;
   private boolean isAprilTag;
 
   /** Creates a new DriveToTarget. */
-  public DriveToTarget(DriveSubsystem driveSubsystem, VisionTargeting visionTargeting, boolean isAprilTag) 
+  public RotateToTarget(DriveSubsystem driveSubsystem, VisionTargeting visionTargeting, boolean isAprilTag) 
   {
     this.driveSubsystem = driveSubsystem;
     this.visionTargeting = visionTargeting;
@@ -43,23 +42,34 @@ public class DriveToTarget extends CommandBase
     {
       visionTargeting.setPipeline(VisionConstants.detectorPipeline);
     }
+    SmartDashboard.putBoolean("Command Test", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() 
   {
- 
-    double distance_adjust = KpDistance * visionTargeting.getDistanceToTarget(isAprilTag);
+    
+    double steering_adjust = 0;
 
-    driveSubsystem.teleDrive(distance_adjust ,0, 0, false);
-    SmartDashboard.putNumber("Distance Adjust", distance_adjust);
+    if (visionTargeting.getTx() > 1.0)
+    {
+      steering_adjust = (KpAim * visionTargeting.getTx()) - min_aim_command;
+    }
+    else if (visionTargeting.getTx() < -1.0)
+    {
+      steering_adjust = (KpAim * visionTargeting.getTx())  + min_aim_command;
+    }
+
+    driveSubsystem.teleDrive(0, 0, steering_adjust, false);
+    SmartDashboard.putNumber("Steering Adjust", steering_adjust);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) 
   {
+    SmartDashboard.putBoolean("Command Test", false);
   }
 
   // Returns true when the command should end.

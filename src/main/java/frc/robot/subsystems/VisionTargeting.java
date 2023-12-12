@@ -62,24 +62,33 @@ public class VisionTargeting extends SubsystemBase
     return tx;
   }
 
-  public double getDistanceToTarget()
+  public double getDistanceToTarget(boolean isAprilTag)
   {
     double targetHeight = 0;
     double distanceToTarget = (Constants.VisionTargeting.cameraHeight - targetHeight) / Math.tan(getTy());
 
     if(VisionTargeting.getTargetVisible()) 
     {
-      if(getObjectType() == "cube")
+      if(isAprilTag) 
       {
-        targetHeight = Constants.VisionTargeting.cubeHeight;
+        targetHeight = Constants.VisionTargeting.aprilTagHeight;
+        return distanceToTarget;
       }
-  
-      if(getObjectType() == "cone")
+
+      else 
       {
-        targetHeight = Constants.VisionTargeting.coneHeight;
+        if(getObjectType() == "cube")
+        {
+          targetHeight = Constants.VisionTargeting.cubeHeight;
+        }
+    
+        if(getObjectType() == "cone")
+        {
+          targetHeight = Constants.VisionTargeting.coneHeight;
+        }
+        SmartDashboard.putNumber("distance to target", distanceToTarget);
+        return distanceToTarget;
       }
-      SmartDashboard.putNumber("distance to target", distanceToTarget);
-      return distanceToTarget;
     }
 
     else 
