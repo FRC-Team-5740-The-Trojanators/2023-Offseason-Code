@@ -14,7 +14,7 @@ public class DriveToTarget extends CommandBase
 {
 
 
-  private final double KpDistance = -20;
+  private final double KpDistance = -.5;
 
 
   private VisionTargeting visionTargeting;
@@ -49,8 +49,9 @@ public class DriveToTarget extends CommandBase
   @Override
   public void execute() 
   {
- 
-    double distance_adjust = KpDistance * visionTargeting.getDistanceToTarget(isAprilTag);
+    double distanceToTarget = visionTargeting.getDistance();
+    SmartDashboard.putNumber("distance to target", distanceToTarget);
+    double distance_adjust = KpDistance * distanceToTarget;
 
     driveSubsystem.teleDrive(distance_adjust ,0, 0, false);
     SmartDashboard.putNumber("Distance Adjust", distance_adjust);

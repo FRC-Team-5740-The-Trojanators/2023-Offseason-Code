@@ -154,10 +154,10 @@ public final class Constants
     
     public static final class VisionTargeting 
     {
-        public static final double cameraHeight = Units.inchesToMeters(30.5);
-        public static final double cubeHeight = Units.inchesToMeters(4.5);
-        public static final double coneHeight = Units.inchesToMeters(6.5);
-        public static final double aprilTagHeight = Units.inchesToMeters(8);
+        public static final double cameraHeight = (30.5);
+        public static final double cubeHeight = (4.5);
+        public static final double coneHeight = (6.5);
+        public static final double aprilTagHeight = (18.5);
     }
   
 }

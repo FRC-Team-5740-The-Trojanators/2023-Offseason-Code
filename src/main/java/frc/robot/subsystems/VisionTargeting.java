@@ -17,6 +17,7 @@ public class VisionTargeting extends SubsystemBase
   private double ty;
   private double tx; 
   private String tclass;
+  private double distance;
   /** Creates a new VisionTargeting. */
   public VisionTargeting() 
   {
@@ -32,12 +33,15 @@ public class VisionTargeting extends SubsystemBase
     NetworkTableEntry networkTableTv = table.getEntry("tv");
     NetworkTableEntry networkTableTy = table.getEntry("ty");
     NetworkTableEntry networkTableTclass = table.getEntry("tclass");
+    NetworkTableEntry networkTablebotpose_targetspace = table.getEntry("botpose_targetspace");
    
     //read values periodically
     tx = networkTableTx.getDouble(0.0);
     tv = networkTableTv.getDouble(0.0);
     ty = networkTableTy.getDouble(0.0);
     tclass = networkTableTclass.getString("");
+    double botpose[] = networkTablebotpose_targetspace.getDoubleArray(new double[6]);
+    distance = botpose[2];
   }
   
   public static boolean getTargetVisible()
@@ -62,16 +66,23 @@ public class VisionTargeting extends SubsystemBase
     return tx;
   }
 
+  public double getDistance()
+  {
+    return distance;
+  }
+
   public double getDistanceToTarget(boolean isAprilTag)
   {
     double targetHeight = 0;
-    double distanceToTarget = (Constants.VisionTargeting.cameraHeight - targetHeight) / Math.tan(getTy());
+    double tyRadians = (3.14159 / 180.0) * getTy();
+    double distanceToTarget = (targetHeight - Constants.VisionTargeting.cameraHeight) / Math.tan(tyRadians);
 
     if(VisionTargeting.getTargetVisible()) 
     {
       if(isAprilTag) 
       {
         targetHeight = Constants.VisionTargeting.aprilTagHeight;
+        SmartDashboard.putNumber("distance to target", distanceToTarget);
         return distanceToTarget;
       }
 
@@ -93,6 +104,7 @@ public class VisionTargeting extends SubsystemBase
 
     else 
     {
+      SmartDashboard.putNumber("distance to target", distanceToTarget);
       return 0;
     }
   }  
